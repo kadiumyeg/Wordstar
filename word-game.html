@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Star — 300 High-Frequency Words</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sun:#FFD600;--green:#2E7D32;--coral:#D32F2F;--blue:#1565C0;
+  --sky:#42A5F5;--purple:#6A1B9A;--bg:#EEF4FB;--card:#fff;
+  --radius:16px;--shadow:0 4px 16px rgba(0,0,0,.09);
+  --display:'Baloo 2',sans-serif;--body:'Nunito',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--body);background:var(--bg);min-height:100vh;overflow-x:hidden;}
+.stars-bg{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.sdot{position:absolute;border-radius:50%;background:var(--sun);opacity:.14;animation:twinkle 3s infinite alternate;}
+@keyframes twinkle{to{opacity:.30;transform:scale(1.4);}}
+header{position:relative;z-index:10;background:linear-gradient(120deg,#0D47A1,#1976D2,#42A5F5);
+  color:#fff;padding:13px 18px;display:flex;align-items:center;gap:12px;
+  box-shadow:0 3px 14px rgba(0,0,0,.22);flex-wrap:wrap;}
+.logo{font-family:var(--display);font-size:1.75rem;font-weight:800;}
+.logo span{color:var(--sun);}
+.hdr-right{margin-left:auto;display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+.stars-pill{background:var(--sun);color:#333;border-radius:20px;padding:5px 13px;font-weight:800;font-size:.88rem;}
+.btn-nav{background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.35);color:#fff;
+  border-radius:9px;padding:6px 13px;font-family:var(--body);font-weight:700;font-size:.8rem;cursor:pointer;}
+.btn-nav:hover{background:rgba(255,255,255,.28);}
+main{position:relative;z-index:5;max-width:780px;margin:0 auto;padding:22px 15px 60px;}
+.screen{display:none;}.screen.active{display:block;}
+.sec-title{font-family:var(--display);font-size:1.5rem;font-weight:800;color:var(--blue);margin-bottom:5px;}
+.sec-sub{color:#666;font-size:.88rem;margin-bottom:18px;}
+
+/* LEVEL GRID */
+.level-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.lcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:17px 15px;cursor:pointer;border:3px solid transparent;position:relative;
+  transition:transform .15s,box-shadow .15s;}
+.lcard:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.13);}
+.lcard.alpha-card{border:3px solid #FFD600;background:linear-gradient(135deg,#FFFDE7,#FFF9C4);}
+.licon{font-size:1.9rem;margin-bottom:5px;}
+.lname{font-family:var(--display);font-size:1rem;font-weight:800;}
+.lrange{font-size:.73rem;color:#aaa;margin-top:1px;}
+.lexpect{font-size:.72rem;font-weight:700;margin-top:5px;padding:2px 7px;border-radius:6px;display:inline-block;}
+.lprog{margin-top:9px;height:8px;background:#eee;border-radius:8px;overflow:hidden;}
+.lbar{height:100%;border-radius:8px;transition:width .4s;}
+.lpct{font-size:.7rem;color:#bbb;margin-top:3px;}
+.exp-banner{position:absolute;top:8px;right:8px;font-size:.62rem;font-weight:800;
+  background:var(--sun);color:#333;border-radius:6px;padding:2px 6px;}
+
+/* MODE */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:16px;}
+.mcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:20px 13px;cursor:pointer;text-align:center;border:3px solid transparent;transition:transform .15s,border-color .15s;}
+.mcard:hover{transform:translateY(-3px);border-color:var(--sky);}
+.mcard.alpha-mode{border-color:#FFB300;background:#FFFDE7;}
+.mcard.alpha-mode:hover{border-color:#F9A825;}
+.mode-section-label{font-family:var(--display);font-size:.85rem;font-weight:800;color:#888;
+  text-transform:uppercase;letter-spacing:.5px;margin:16px 0 10px;padding-bottom:6px;
+  border-bottom:2px solid #eee;}
+.micon{font-size:2.1rem;margin-bottom:6px;}
+.mname{font-family:var(--display);font-size:.98rem;font-weight:800;color:#222;}
+.mdesc{font-size:.74rem;color:#888;margin-top:3px;}
+
+/* BUTTONS */
+.btn-back{background:#eee;border:none;border-radius:10px;padding:9px 19px;cursor:pointer;
+  font-family:var(--body);font-weight:700;font-size:.88rem;color:#555;}
+.btn-back:hover{background:#ddd;}
+.btn-primary{background:linear-gradient(120deg,var(--blue),var(--sky));color:#fff;border:none;
+  border-radius:12px;padding:11px 24px;font-family:var(--body);font-weight:800;font-size:.92rem;
+  cursor:pointer;box-shadow:var(--shadow);transition:transform .15s;}
+.btn-primary:hover{transform:translateY(-2px);}
+
+/* AUDIO BUTTON */
+.btn-audio{background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5);color:#fff;
+  border-radius:50%;width:38px;height:38px;font-size:1.1rem;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
+.btn-audio:hover{background:rgba(255,255,255,.38);}
+.btn-audio.dark{background:#E3F2FD;border-color:#90CAF9;color:var(--blue);}
+.btn-audio.dark:hover{background:#BBDEFB;}
+.btn-audio.speaking{animation:pulse-ring .6s infinite;}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(66,165,245,.5);}70%{box-shadow:0 0 0 8px rgba(66,165,245,0);}100%{box-shadow:0 0 0 0 rgba(66,165,245,0);}}
+
+/* GAME TOP */
+.game-top{display:flex;align-items:center;gap:9px;margin-bottom:15px;flex-wrap:wrap;}
+.prog-wrap{flex:1;height:11px;background:#ddd;border-radius:10px;overflow:hidden;min-width:90px;}
+.prog-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--sky),var(--blue));transition:width .4s;}
+.score-pill{background:var(--sun);color:#333;border-radius:18px;padding:4px 12px;font-weight:800;font-size:.86rem;}
+.q-count{font-size:.8rem;color:#666;white-space:nowrap;}
+
+/* FLASHCARD */
+.fc-wrap{perspective:800px;margin:8px auto 18px;max-width:340px;height:185px;cursor:pointer;}
+.fc{width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s;position:relative;}
+.fc.flipped{transform:rotateY(180deg);}
+.fc-front,.fc-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);
+  box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+.fc-front{background:linear-gradient(130deg,#0D47A1,#42A5F5);color:#fff;}
+.fc-back{background:linear-gradient(130deg,#1B5E20,#66BB6A);color:#fff;transform:rotateY(180deg);}
+.fc-word{font-family:var(--display);font-size:3rem;font-weight:800;letter-spacing:1px;}
+.fc-hint{font-size:.8rem;opacity:.8;}
+.fc-sentence{font-size:.98rem;text-align:center;padding:0 18px;line-height:1.55;}
+.fc-btns{display:flex;gap:11px;justify-content:center;margin-top:6px;}
+.btn-knew,.btn-practice{border:none;border-radius:12px;padding:10px 22px;font-family:var(--body);
+  font-weight:800;font-size:.92rem;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.12);transition:transform .1s;}
+.btn-knew{background:#2E7D32;color:#fff;}
+.btn-practice{background:#C62828;color:#fff;}
+.btn-knew:hover,.btn-practice:hover{transform:translateY(-2px);}
+
+/* MULTIPLE CHOICE */
+.mc-box{background:linear-gradient(130deg,#0D47A1,#1976D2);color:#fff;border-radius:var(--radius);
+  padding:26px 17px;text-align:center;margin-bottom:15px;box-shadow:var(--shadow);}
+.mc-big{font-family:var(--display);font-size:3rem;font-weight:800;}
+.mc-sent{font-size:.98rem;opacity:.88;margin-top:8px;line-height:1.6;}
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mc-btn{background:var(--card);border:3px solid #e0e0e0;border-radius:13px;padding:14px 8px;
+  font-family:var(--display);font-size:1.3rem;font-weight:800;cursor:pointer;
+  transition:border-color .15s,background .15s,transform .1s;box-shadow:var(--shadow);}
+.mc-btn:hover{border-color:var(--sky);transform:translateY(-2px);}
+.mc-btn.correct{background:#E8F5E9;border-color:#2E7D32;animation:pop .3s;}
+.mc-btn.wrong{background:#FFEBEE;border-color:#C62828;}
+@keyframes pop{50%{transform:scale(1.07);}}
+
+/* SPELL IT */
+.spell-box{background:linear-gradient(130deg,#4A148C,#7B1FA2);color:#fff;border-radius:var(--radius);
+  padding:22px 17px;text-align:center;margin-bottom:15px;box-shadow:var(--shadow);}
+.spell-sent{font-size:1.02rem;line-height:1.6;}
+.spell-blank{display:inline-block;border-bottom:3px solid rgba(255,255,255,.8);min-width:65px;}
+.ltiles{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:11px;}
+.ltile{width:36px;height:42px;background:var(--card);border:2px solid #ddd;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-family:var(--display);
+  font-size:1.18rem;font-weight:800;cursor:pointer;transition:background .15s,border-color .15s;}
+.ltile:hover{background:#E3F2FD;border-color:var(--sky);}
+.ltile.used{opacity:.28;pointer-events:none;}
+.spell-row{display:flex;gap:9px;margin-bottom:11px;}
+.spell-inp{flex:1;border:3px solid #ddd;border-radius:13px;padding:12px 13px;font-family:var(--display);
+  font-size:1.45rem;font-weight:800;text-align:center;outline:none;transition:border-color .15s;}
+.spell-inp:focus{border-color:var(--purple);}
+.spell-inp.correct{border-color:#2E7D32;background:#E8F5E9;}
+.spell-inp.wrong{border-color:#C62828;background:#FFEBEE;}
+.btn-check{background:var(--purple);color:#fff;border:none;border-radius:13px;
+  padding:12px 19px;font-family:var(--body);font-weight:800;font-size:.92rem;cursor:pointer;}
+
+/* SORT */
+.sort-instr{text-align:center;color:#555;font-size:.88rem;margin-bottom:11px;}
+.sort-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:50px;margin-bottom:16px;}
+.sort-chip{background:linear-gradient(120deg,var(--blue),var(--sky));color:#fff;border-radius:26px;
+  padding:7px 16px;font-family:var(--display);font-size:1.02rem;font-weight:800;
+  cursor:pointer;box-shadow:var(--shadow);transition:transform .15s;}
+.sort-chip:hover{transform:scale(1.07);}
+.sort-chip.selected{outline:3px solid var(--sun);}
+.sort-bins{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sort-bin{background:var(--card);border-radius:var(--radius);border:3px dashed #ccc;
+  padding:12px;min-height:88px;cursor:pointer;transition:border-color .2s,background .2s;}
+.sort-bin:hover{border-color:var(--sky);background:#F0F8FF;}
+.sort-bin h4{font-family:var(--display);font-size:.92rem;font-weight:800;margin-bottom:8px;}
+.placed-area{display:flex;flex-wrap:wrap;gap:5px;}
+.placed-chip{border-radius:16px;padding:3px 10px;font-family:var(--display);font-size:.85rem;font-weight:800;color:#fff;}
+.placed-chip.pending{background:#90CAF9;}
+.placed-chip.ok{background:#2E7D32;}
+.placed-chip.bad{background:#C62828;}
+.btn-check-sort{display:block;margin:13px auto 0;background:var(--blue);color:#fff;
+  border:none;border-radius:12px;padding:11px 28px;font-family:var(--body);font-weight:800;font-size:.92rem;cursor:pointer;}
+
+/* ═══ ALPHABET GAMES ═══ */
+/* Letter Recognition */
+.alpha-box{background:linear-gradient(130deg,#E65100,#FF8F00);color:#fff;border-radius:var(--radius);
+  padding:28px 17px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow);}
+.alpha-letter-display{font-family:var(--display);font-size:5rem;font-weight:800;line-height:1;
+  display:flex;align-items:center;justify-content:center;gap:20px;}
+.alpha-case-label{font-size:.8rem;opacity:.8;margin-top:6px;}
+.alpha-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.alpha-btn{background:var(--card);border:3px solid #e0e0e0;border-radius:13px;padding:14px 6px;
+  font-family:var(--display);font-size:1.6rem;font-weight:800;cursor:pointer;
+  transition:border-color .15s,background .15s,transform .1s;box-shadow:var(--shadow);text-align:center;}
+.alpha-btn:hover{border-color:#FF8F00;transform:translateY(-2px);}
+.alpha-btn.correct{background:#E8F5E9;border-color:#2E7D32;animation:pop .3s;}
+.alpha-btn.wrong{background:#FFEBEE;border-color:#C62828;}
+
+/* Letter Sound (Phonics) */
+.phonics-box{background:linear-gradient(130deg,#1A237E,#283593);color:#fff;border-radius:var(--radius);
+  padding:24px 17px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow);}
+.phonics-picture{font-size:5rem;margin-bottom:8px;display:block;}
+.phonics-word{font-family:var(--display);font-size:1.4rem;font-weight:800;margin-bottom:4px;}
+.phonics-instr{font-size:.82rem;opacity:.8;}
+.phonics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.phonics-btn{background:var(--card);border:3px solid #e0e0e0;border-radius:13px;padding:14px 6px;
+  font-family:var(--display);font-size:1.8rem;font-weight:800;cursor:pointer;
+  transition:border-color .15s,background .15s,transform .1s;box-shadow:var(--shadow);}
+.phonics-btn:hover{border-color:#3949AB;transform:translateY(-2px);}
+.phonics-btn.correct{background:#E8F5E9;border-color:#2E7D32;animation:pop .3s;}
+.phonics-btn.wrong{background:#FFEBEE;border-color:#C62828;}
+
+/* Alphabet Order */
+.order-instr{text-align:center;color:#555;font-size:.88rem;margin-bottom:12px;}
+.order-target{background:linear-gradient(130deg,#4A148C,#7B1FA2);color:#fff;border-radius:var(--radius);
+  padding:18px;text-align:center;margin-bottom:14px;box-shadow:var(--shadow);}
+.order-target-label{font-size:.8rem;opacity:.8;margin-bottom:6px;}
+.order-slots{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.order-slot{width:44px;height:52px;border:3px dashed rgba(255,255,255,.5);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-family:var(--display);
+  font-size:1.5rem;font-weight:800;}
+.order-slot.filled{border-style:solid;border-color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);}
+.order-slot.correct{border-color:#A5D6A7;background:rgba(165,214,167,.2);}
+.order-slot.wrong{border-color:#EF9A9A;background:rgba(239,154,154,.2);}
+.order-pool{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+.order-chip{background:linear-gradient(120deg,#4A148C,#7B1FA2);color:#fff;border-radius:12px;
+  width:46px;height:52px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:1.5rem;font-weight:800;cursor:pointer;
+  box-shadow:var(--shadow);transition:transform .15s;}
+.order-chip:hover{transform:scale(1.1);}
+.order-chip.selected{outline:3px solid var(--sun);}
+.order-chip.used{opacity:.25;pointer-events:none;}
+
+/* Uppercase Lowercase Match */
+.match-instr{text-align:center;color:#555;font-size:.88rem;margin-bottom:14px;}
+.match-show{background:linear-gradient(130deg,#00695C,#00897B);color:#fff;border-radius:var(--radius);
+  padding:22px 17px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow);}
+.match-big{font-family:var(--display);font-size:4.5rem;font-weight:800;line-height:1;}
+.match-label{font-size:.8rem;opacity:.8;margin-top:6px;}
+.match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.match-btn{background:var(--card);border:3px solid #e0e0e0;border-radius:13px;padding:14px 6px;
+  font-family:var(--display);font-size:1.7rem;font-weight:800;cursor:pointer;
+  transition:border-color .15s,background .15s,transform .1s;box-shadow:var(--shadow);}
+.match-btn:hover{border-color:#00897B;transform:translateY(-2px);}
+.match-btn.correct{background:#E8F5E9;border-color:#2E7D32;animation:pop .3s;}
+.match-btn.wrong{background:#FFEBEE;border-color:#C62828;}
+
+/* RESULTS */
+#result-screen{text-align:center;padding:26px 10px;}
+.res-trophy{font-size:5rem;margin-bottom:8px;animation:bounce 1s infinite alternate;}
+@keyframes bounce{to{transform:translateY(-12px);}}
+.res-title{font-family:var(--display);font-size:1.9rem;font-weight:800;color:var(--blue);margin-bottom:5px;}
+.res-score{font-size:1.05rem;color:#444;margin-bottom:16px;}
+.res-stars{font-size:1.8rem;margin-bottom:20px;}
+.res-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* REPORT */
+.rpt-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.rpt-top h2{font-family:var(--display);font-size:1.4rem;font-weight:800;color:var(--blue);}
+.rpt-date{font-size:.76rem;color:#aaa;margin-top:3px;}
+.rpt-name-row{display:flex;gap:9px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.rpt-name-inp{border:2px solid #ddd;border-radius:10px;padding:9px 13px;font-family:var(--body);
+  font-size:.92rem;flex:1;min-width:150px;outline:none;}
+.rpt-name-inp:focus{border-color:var(--sky);}
+.rpt-summary{background:linear-gradient(120deg,#E3F2FD,#E8F5E9);border-radius:var(--radius);
+  padding:15px 17px;margin-bottom:14px;border:2px solid #BBDEFB;}
+.rpt-summary h3{font-family:var(--display);font-size:1.05rem;font-weight:800;color:var(--blue);margin-bottom:10px;}
+.srow{display:flex;justify-content:space-between;font-size:.85rem;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.srow:last-child{border-bottom:none;}
+.srow strong{color:#333;}
+.rpt-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px 17px;margin-bottom:12px;}
+.rpt-card-hdr{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap;}
+.rpt-card-hdr h3{font-family:var(--display);font-size:1rem;font-weight:800;}
+.ebadge{font-size:.69rem;font-weight:800;border-radius:7px;padding:2px 8px;}
+.ebadge.met{background:#E8F5E9;color:#1B5E20;}
+.ebadge.partial{background:#FFF8E1;color:#E65100;}
+.ebadge.notmet{background:#FFEBEE;color:#B71C1C;}
+.rbar-row{display:flex;gap:9px;align-items:center;margin-bottom:7px;}
+.rbar-label{font-size:.78rem;color:#666;min-width:90px;}
+.rbar-wrap{flex:1;height:9px;background:#eee;border-radius:8px;overflow:hidden;min-width:70px;}
+.rbar{height:100%;border-radius:8px;}
+.rbar.good{background:#2E7D32;}
+.rbar.mid{background:#F57F17;}
+.rbar.low{background:#C62828;}
+.rbar-pct{font-size:.77rem;font-weight:700;min-width:34px;text-align:right;}
+.expect-note{font-size:.77rem;color:#666;margin-top:7px;padding-top:7px;border-top:1px solid #f0f0f0;line-height:1.55;}
+.expect-note strong{color:#333;}
+.word-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.wchip{font-size:.72rem;border-radius:6px;padding:2px 8px;font-weight:700;}
+.wchip.mastered{background:#E8F5E9;color:#1B5E20;}
+.wchip.unseen{background:#F5F5F5;color:#9E9E9E;}
+.rpt-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+.btn-print{background:#455A64;color:#fff;border:none;border-radius:10px;
+  padding:10px 20px;font-family:var(--body);font-weight:700;font-size:.85rem;cursor:pointer;}
+.btn-danger-sm{background:#FFEBEE;color:#C62828;border:2px solid #FFCDD2;border-radius:10px;
+  padding:10px 18px;font-family:var(--body);font-weight:700;font-size:.85rem;cursor:pointer;}
+@media print{
+  header,.btn-back,.btn-print,.btn-danger-sm,.btn-nav,.stars-bg,
+  #level-screen,#mode-screen,#game-screen,#result-screen,
+  .rpt-btns,.rpt-name-row{display:none!important;}
+  body{background:#fff;}main{padding:0;}
+  #report-screen{display:block!important;}
+}
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(68px);
+  background:#333;color:#fff;border-radius:26px;padding:10px 24px;
+  font-weight:700;font-size:.92rem;z-index:9999;transition:transform .3s;pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.good{background:#2E7D32;}
+#toast.bad{background:#C62828;}
+.cpiec{position:fixed;width:10px;height:13px;border-radius:2px;top:-20px;
+  animation:cfall 2s ease-in forwards;z-index:9999;pointer-events:none;}
+@keyframes cfall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+@media(max-width:480px){
+  .level-grid,.mode-grid,.mc-grid,.sort-bins,.alpha-grid,.phonics-grid,.match-grid{grid-template-columns:repeat(2,1fr);}
+  .fc-word,.mc-big{font-size:2.3rem;}
+}
+</style>
+</head>
+<body>
+<div class="stars-bg" id="stars-bg"></div>
+<header>
+  <div>
+    <div class="logo">⭐ Word <span>Star</span></div>
+    <div style="font-size:.74rem;opacity:.76">First 300 High-Frequency Words · Alberta</div>
+  </div>
+  <div class="hdr-right">
+    <div class="stars-pill">⭐ <span id="total-stars">0</span></div>
+    <button class="btn-nav" onclick="showReport()">📊 Report</button>
+    <button class="btn-nav" onclick="confirmReset()">🔄 Reset</button>
+  </div>
+</header>
+<main>
+
+<!-- LEVEL SELECT -->
+<div id="level-screen" class="screen active">
+  <div class="sec-title">Pick a Level 🚀</div>
+  <div class="sec-sub">Start where you feel comfortable and work your way up!</div>
+  <div class="level-grid" id="level-grid"></div>
+</div>
+
+<!-- MODE SELECT -->
+<div id="mode-screen" class="screen">
+  <div class="sec-title" id="mode-title">Choose a Game</div>
+  <div class="sec-sub" id="mode-sub"></div>
+  <div id="mode-content"></div>
+  <button class="btn-back" onclick="show('level-screen')">← Back</button>
+</div>
+
+<!-- GAME -->
+<div id="game-screen" class="screen">
+  <div class="game-top">
+    <button class="btn-back" onclick="show('level-screen')" style="padding:6px 13px;font-size:.82rem;">✕ Quit</button>
+    <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="q-count" id="q-count">1 / 10</div>
+    <div class="score-pill">⭐ <span id="game-stars">0</span></div>
+  </div>
+  <div id="game-content"></div>
+</div>
+
+<!-- RESULTS -->
+<div id="result-screen" class="screen">
+  <div class="res-trophy" id="res-trophy">🏆</div>
+  <div class="res-title" id="res-title">Amazing!</div>
+  <div class="res-score" id="res-score"></div>
+  <div class="res-stars" id="res-stars"></div>
+  <div class="res-btns">
+    <button class="btn-primary" onclick="startGame(curMode)">Play Again 🔄</button>
+    <button class="btn-primary" onclick="show('mode-screen')">New Game 🎮</button>
+    <button class="btn-primary" onclick="show('level-screen')">Change Level 📚</button>
+    <button class="btn-primary" onclick="showReport()">📊 View Report</button>
+  </div>
+</div>
+
+<!-- REPORT -->
+<div id="report-screen" class="screen">
+  <div class="rpt-top">
+    <div style="flex:1"><h2>📊 Progress Report</h2><div class="rpt-date" id="rpt-date"></div></div>
+    <button class="btn-back" onclick="show('level-screen')">← Back</button>
+  </div>
+  <div class="rpt-name-row">
+    <input class="rpt-name-inp" id="rpt-name" placeholder="Student name (optional)" type="text"
+      oninput="studentName=this.value;saveState()">
+    <div class="rpt-btns">
+      <button class="btn-print" onclick="window.print()">🖨️ Print</button>
+      <button class="btn-danger-sm" onclick="confirmReset()">🔄 Reset All</button>
+    </div>
+  </div>
+  <div id="report-body"></div>
+</div>
+
+</main>
+<div id="toast"></div>
+<script>
+// ═══ WORD LIST ═══
+const W=[
+  'the','of','and','a','to','in','is','you','that','it',
+  'he','was','for','on','are','as','with','his','they','I',
+  'at','be','this','have','from','or','one','had','by','word',
+  'but','not','what','all','were','we','when','your','can','said',
+  'there','use','an','each','which','she','do','how','their','if',
+  'will','up','other','about','out','many','then','them','these','so',
+  'some','her','would','make','like','him','into','time','has','look',
+  'two','more','write','go','see','number','no','way','could','people',
+  'my','than','first','water','been','call','who','am','its','now',
+  'find','long','down','day','did','get','come','made','may','part',
+  'over','new','sound','take','only','little','work','know','place','year',
+  'live','me','back','give','most','very','after','thing','our','just',
+  'name','good','sentence','man','think','say','great','where','help','through',
+  'much','before','line','right','too','mean','old','any','same','tell',
+  'boy','follow','came','want','show','also','around','form','three','small',
+  'set','put','end','does','another','well','large','must','big','even',
+  'such','because','turn','here','why','ask','went','men','read','need',
+  'land','different','home','us','move','try','kind','hand','picture','again',
+  'change','off','play','spell','air','away','animal','house','point','page',
+  'letter','mother','answer','found','study','still','learn','should','America','world',
+  'high','every','near','add','food','between','own','below','country','plant',
+  'last','school','father','keep','tree','never','start','city','earth','eye',
+  'light','thought','head','under','story','saw','left',"don't",'few','while',
+  'along','might','close','something','seem','next','hard','open','example','begin',
+  'life','always','those','both','paper','together','got','group','often','run',
+  'important','until','children','side','feet','car','mile','night','walk','white',
+  'sea','began','grow','took','river','four','carry','state','once','book',
+  'hear','stop','without','second','late','miss','idea','enough','eat','face',
+  'watch','far','real','almost','let','above','girl','sometimes','mountain','cut',
+  'young','talk','soon','list','song','being','leave','family',"it's",'body'
+];
+
+// ═══ ALPHABET DATA ═══
+const ALPHABET='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+// Phonics picture data: letter -> {emoji, word}
+const PHONICS={
+  A:{e:'🍎',w:'apple'},  B:{e:'🏀',w:'ball'},   C:{e:'🐱',w:'cat'},
+  D:{e:'🐶',w:'dog'},    E:{e:'🥚',w:'egg'},     F:{e:'🐟',w:'fish'},
+  G:{e:'🍇',w:'grape'},  H:{e:'🏠',w:'house'},   I:{e:'🍦',w:'ice cream'},
+  J:{e:'🃏',w:'jack'},   K:{e:'🪁',w:'kite'},    L:{e:'🦁',w:'lion'},
+  M:{e:'🌙',w:'moon'},   N:{e:'🐦',w:'nest'},    O:{e:'🐙',w:'octopus'},
+  P:{e:'🥧',w:'pie'},    Q:{e:'👸',w:'queen'},   R:{e:'🌈',w:'rainbow'},
+  S:{e:'☀️',w:'sun'},    T:{e:'🐯',w:'tiger'},   U:{e:'☂️',w:'umbrella'},
+  V:{e:'🎻',w:'violin'}, W:{e:'🌊',w:'wave'},    X:{e:'🎶',w:'xylophone'},
+  Y:{e:'🧶',w:'yarn'},   Z:{e:'🦓',w:'zebra'}
+};
+
+const LEVELS=[
+  {id:'alpha',name:'Alphabet',icon:'🔤',color:'#F9A825',s:null,e:null,isAlpha:true,
+   expectNote:'Start here — learn the alphabet before words!'},
+  {id:'k',   name:'Kindergarten',    icon:'🌱',color:'#43A047',s:0,  e:49,
+   expectEnd:10, expectNote:'Grade target: know words 1–10 ("it")'},
+  {id:'g1a', name:'Grade 1 — Part A',icon:'📖',color:'#1976D2',s:50, e:99,
+   expectEnd:45, expectNote:'Grade 1 target: words 1–45 ("which")'},
+  {id:'g1b', name:'Grade 1 — Part B',icon:'📗',color:'#7B1FA2',s:100,e:149,
+   expectEnd:125,expectNote:'Grade 2 target: words 1–125 ("think")'},
+  {id:'g2a', name:'Grade 2 — Part A',icon:'⭐',color:'#E64A19',s:150,e:199,
+   expectEnd:null,expectNote:'Above Grade 2 target — challenge words!'},
+  {id:'g2b', name:'Grade 2 — Part B',icon:'🚀',color:'#F57F17',s:200,e:249,
+   expectEnd:null,expectNote:'Well above Grade 2 — great stretch practice!'},
+  {id:'g3',  name:'Grade 3',         icon:'🏆',color:'#C2185B',s:250,e:299,
+   expectEnd:null,expectNote:'Grade 3 words — excellent extension!'},
+];
+
+const SENT={
+  the:'Can you see the cat?',of:'A cup of water.',and:'Sun and moon.',
+  a:'I have a dog.',to:'I go to school.',in:'The fish is in the water.',
+  is:'She is happy.',you:'Do you like cake?',that:'I know that song.',
+  it:'It is big.',he:'He ran fast.',was:'It was fun.',
+  for:'A gift for you.',on:'The book is on the table.',are:'We are friends.',
+  as:'As big as a bear.',with:'Play with me.',his:'His hat is red.',
+  they:'They like to run.',I:'I can read.',at:'Look at the bird.',
+  be:'I want to be a star.',this:'This is my pet.',have:'I have two cats.',
+  from:'A card from Grandma.',or:'Cat or dog?',one:'Just one more!',
+  had:'She had a snack.',by:'Sit by me.',word:'That is a big word.',
+  but:'I tried but fell.',not:'It is not cold.',what:'What do you see?',
+  all:'We all jumped.',were:'They were loud.',we:'We won!',
+  when:'When do we eat?',your:'Your shoes are cool.',can:'Can you hop?',
+  said:'She said hello.',there:'Look over there.',use:'Use your pencil.',
+  an:'An apple a day.',each:'Each child got one.',which:'Which one do you want?',
+  she:'She is my friend.',do:'Do your best!',how:'How are you?',
+  their:'Their dog is big.',if:'If you try, you win.',
+  will:'I will help.',up:'Look up!',other:'The other book is red.',
+  about:'Tell me about it.',out:'Go out and play!',many:'Many stars in the sky.',
+  then:'Eat first, then play.',them:'Give it to them.',these:'These are mine.',
+  so:'I was so happy!',some:'Some birds can sing.',her:'I gave her a hug.',
+  would:'I would love cake.',make:"Let's make a card.",like:'I like ice cream.',
+  him:'Play with him.',into:'Jump into the pool.',time:'Time to sleep.',
+  has:'She has a cat.',look:'Look at me!',two:'I have two hands.',
+  more:'I want more juice.',write:'Write your name.',go:'Go, team, go!',
+  see:'I see a rainbow.',number:'My lucky number is 7.',no:'No running inside.',
+  way:'Which way is home?',could:'I could jump so high.',people:'People are kind.',
+  my:'My favorite color is blue.',than:'Bigger than a bus.',first:'I was first!',
+  water:'Drink your water.',been:'I have been here before.',call:'Call my name.',
+  who:'Who is at the door?',am:'I am seven.',its:'The dog wagged its tail.',
+  now:"Let's go now.",find:'Can you find the star?',long:'It is a long road.',
+  down:'Sit down, please.',day:'Have a great day!',did:'Did you see that?',
+  get:'Get your coat.',come:'Come with me!',made:'I made a cake.',may:'You may go.',
+  part:'This is the best part.',over:'The bird flew over.',new:'I have a new book.',
+  sound:'I hear a sound.',take:'Take a deep breath.',only:'I only want one.',
+  little:'A little puppy.',work:'Good work today!',know:'I know that!',
+  place:'This is my place.',year:'Happy New Year!',live:'I live on Maple Street.',
+  me:'Come with me.',back:'Come back soon.',give:'Give me five!',most:'I ate the most.',
+  very:'I am very happy.',after:'Play after lunch.',thing:'What is that thing?',
+  our:'This is our house.',just:'Just one bite!',name:'What is your name?',
+  good:'Good job!',sentence:'Read the sentence.',man:'The man waved.',
+  think:'Think before you leap.',say:'What did you say?',great:'You are great!',
+  where:'Where are you?',help:'Can you help me?',through:'Walk through the door.',
+  much:'How much is it?',before:'Wash hands before eating.',line:'Stand in a line.',
+  right:'Turn right at the tree.',too:'Me too!',mean:'What does that mean?',
+  old:'How old are you?',any:'Do you have any?',same:'We have the same shoes.',
+  tell:'Tell me a story.',boy:'The boy laughed.',follow:'Follow the leader.',
+  came:'She came to visit.',want:'I want to read.',show:'Show me your drawing.',
+  also:'I also like cats.',around:'Look around you.',form:'Form a circle.',
+  three:'I count three stars.',small:'A small but mighty ant.',
+  set:'Set the table.',put:'Put it away.',end:'The end!',does:'Does it hurt?',
+  another:'Can I have another?',well:'I feel well.',large:'A large pizza.',
+  must:'You must try it.',big:'What a big dog!',even:'Even I can do it.',
+  such:'Such a nice day!',because:'I smiled because I was happy.',
+  turn:"It's your turn.",here:'Come here.',why:'Why is the sky blue?',
+  ask:'Ask a question.',went:'We went to the park.',men:'Two men walked by.',
+  read:'I love to read.',need:'I need a hug.',land:'The plane will land.',
+  different:'Every snowflake is different.',home:'Home sweet home.',us:'Come with us.',
+  move:'Move your feet!',try:'Always try your best.',kind:'Be kind.',
+  hand:'Hold my hand.',picture:'Draw a picture.',again:'Do it again!',
+  change:'Change your socks.',off:'Lights off.',play:"Let's play!",
+  spell:'Can you spell your name?',air:'Fresh air is nice.',away:'Put it away.',
+  animal:'My favorite animal is a dog.',house:'My house is yellow.',
+  point:'Point to the sky.',page:'Turn the page.',letter:'I got a letter.',
+  mother:'My mother is kind.',answer:'I know the answer.',found:'I found a coin.',
+  study:"Let's study together.",still:'Be still and listen.',learn:'I want to learn.',
+  should:'You should try.',America:'I live in North America.',world:'The world is big.',
+  high:'Eagles fly high.',every:'Every day is new.',near:'Stay near me.',
+  add:'Add the numbers.',food:'I love food.',between:'Sit between us.',
+  own:'I have my own book.',below:'Look below the table.',
+  country:'I love my country.',plant:'Water the plant.',last:'Save the last one.',
+  school:'I love school.',father:'My father is tall.',keep:'Keep it clean.',
+  tree:'Climb the tree.',never:'Never give up.',start:'Ready, set, start!',
+  city:'The city lights glow.',earth:'We love the earth.',eye:'I winked my eye.',
+  light:'Turn on the light.',thought:'I thought so.',head:'Nod your head.',
+  under:'Under the bridge.',story:'Tell me a story.',saw:'I saw a shooting star.',
+  left:'Turn left here.',"don't":"Don't give up.",few:'Just a few more steps.',
+  while:'Wait a while.',along:'Come along!',might:'I might win.',
+  close:'Close your eyes.',something:'Something is hiding.',seem:'You seem happy.',
+  next:'Who is next?',hard:'Try hard!',open:'Open the gift!',
+  example:'Give an example.',begin:"Let's begin!",life:'Life is great.',
+  always:'I always try.',those:'Those are mine.',both:'Both are great.',
+  paper:'Write on paper.',together:'We do it together.',got:'I got a gold star.',
+  group:'Our group won.',often:'I often sing.',run:'Run to the finish!',
+  important:'You are important.',until:"Wait until it's ready.",
+  children:'Children love to play.',side:'Stand by my side.',feet:'My feet are cold.',
+  car:'The car is fast.',mile:'One more mile!',night:'Stars come out at night.',
+  walk:'Walk the dog.',white:'White clouds float.',sea:'The sea is blue.',
+  began:'The story began.',grow:'Plants grow in sun.',took:'She took a big step.',
+  river:'The river runs fast.',four:'I have four crayons.',carry:'Carry your backpack.',
+  state:'Alberta is a province.',once:'Once upon a time.',book:'Open your book.',
+  hear:'Can you hear that?',stop:'Stop, look, listen.',
+  without:"I can't sleep without my blanket.",second:'I came in second.',
+  late:"Don't be late.",miss:'I miss you.',idea:'Great idea!',
+  enough:'I have enough.',eat:'Eat your veggies.',face:'Smile on your face.',
+  watch:'Watch the stars.',far:'How far is it?',real:'This is real!',
+  almost:'Almost there!',let:"Let's go!",above:'Look above you.',
+  girl:'The girl smiled.',sometimes:'Sometimes I dream of flying.',
+  mountain:'The mountain is tall.',cut:'Cut the paper.',
+  young:'You are young and brave.',talk:"Let's talk.",soon:'Be home soon.',
+  list:'Check the list.',song:'Sing a song.',being:'Being kind matters.',
+  leave:"Don't leave yet.",family:'I love my family.',
+  "it's":"It's a great day!",body:'Move your body!'
+};
+
+// ═══ STATE ═══
+let totalStars=parseInt(localStorage.getItem('ws_stars')||'0');
+let levelProg=JSON.parse(localStorage.getItem('ws_prog')||'{}');
+let masteredSet=new Set(JSON.parse(localStorage.getItem('ws_mastered')||'[]'));
+let seenSet=new Set(JSON.parse(localStorage.getItem('ws_seen')||'[]'));
+let alphaMastered=new Set(JSON.parse(localStorage.getItem('ws_alpha')||'[]'));
+let studentName=localStorage.getItem('ws_name')||'';
+let curLevel=null,curMode=null;
+let sessWords=[],sessIdx=0,sessScore=0,sessTotal=10;
+let fcFlipped=false,pendingWord=null,sortAssign={},sortWords=[];
+// Alphabet session state
+let alphaQueue=[],alphaIdx=0,alphaScore=0,alphaTotal=10;
+let orderPending=null,orderAssign=[];
+
+function saveState(){
+  localStorage.setItem('ws_stars',totalStars);
+  localStorage.setItem('ws_prog',JSON.stringify(levelProg));
+  localStorage.setItem('ws_mastered',JSON.stringify([...masteredSet]));
+  localStorage.setItem('ws_seen',JSON.stringify([...seenSet]));
+  localStorage.setItem('ws_alpha',JSON.stringify([...alphaMastered]));
+  localStorage.setItem('ws_name',studentName);
+}
+function addStars(n){totalStars+=n;document.getElementById('total-stars').textContent=totalStars;saveState();}
+
+// ═══ AUDIO ═══
+function speak(text,rate=0.85){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=rate;u.pitch=1.1;u.lang='en-CA';
+  window.speechSynthesis.speak(u);
+}
+function audioBtn(text,label='🔊',cls=''){
+  const safe=text.replace(/"/g,'&quot;');
+  return `<button class="btn-audio ${cls}" data-speak="${safe}" title="Listen">${label}<\/button>`;
+}
+
+// ═══ INIT ═══
+function init(){
+  const sb=document.getElementById('stars-bg');
+  for(let i=0;i<18;i++){
+    const s=document.createElement('div');s.className='sdot';
+    const sz=Math.random()*11+4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*2}s`;
+    sb.appendChild(s);
+  }
+  document.getElementById('total-stars').textContent=totalStars;
+  renderLevelGrid();show('level-screen');
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ═══ LEVEL GRID ═══
+function renderLevelGrid(){
+  const g=document.getElementById('level-grid');g.innerHTML='';
+  LEVELS.forEach(lv=>{
+    let pct=0,mCount=0,total=1;
+    if(lv.isAlpha){
+      mCount=alphaMastered.size;total=26;pct=Math.round(mCount/total*100);
+    } else {
+      const words=W.slice(lv.s,lv.e+1);
+      mCount=words.filter((_,i)=>masteredSet.has(lv.s+i)).length;
+      total=words.length;pct=Math.round(mCount/total*100);
+    }
+    const hasTarget=!lv.isAlpha&&lv.expectEnd&&lv.expectEnd>lv.s&&lv.expectEnd<=lv.e+1;
+    const c=document.createElement('div');
+    c.className='lcard'+(lv.isAlpha?' alpha-card':'');
+    c.innerHTML=`
+      ${hasTarget?`<div class="exp-banner">📌 Grade target here<\/div>`:''}
+      <div class="licon">${lv.icon}<\/div>
+      <div class="lname" style="color:${lv.color}">${lv.name}<\/div>
+      <div class="lrange">${lv.isAlpha?'A–Z, uppercase & lowercase':('Words '+(lv.s+1)+'–'+(lv.e+1))}<\/div>
+      <div class="lexpect" style="background:${lv.color}20;color:${lv.color}">${lv.expectNote}<\/div>
+      <div class="lprog"><div class="lbar" style="width:${pct}%;background:${lv.color}"><\/div><\/div>
+      <div class="lpct">${pct}% mastered (${mCount}/${total})<\/div>
+    `;
+    c.onclick=()=>selectLevel(lv.id);
+    g.appendChild(c);
+  });
+}
+
+function selectLevel(id){
+  curLevel=LEVELS.find(l=>l.id===id);
+  document.getElementById('mode-title').textContent=`${curLevel.icon} ${curLevel.name}`;
+  document.getElementById('mode-sub').textContent=curLevel.expectNote;
+  const mc=document.getElementById('mode-content');
+  if(curLevel.isAlpha){
+    mc.innerHTML=`
+      <div class="mode-section-label">🔤 Alphabet Games<\/div>
+      <div class="mode-grid">
+        <div class="mcard alpha-mode" onclick="startGame('alpha-recog')">
+          <div class="micon">🔡<\/div><div class="mname">Letter Match<\/div>
+          <div class="mdesc">Find the matching uppercase or lowercase letter<\/div>
+        <\/div>
+        <div class="mcard alpha-mode" onclick="startGame('alpha-sound')">
+          <div class="micon">🖼️<\/div><div class="mname">Letter Sound<\/div>
+          <div class="mdesc">See a picture — pick the starting letter<\/div>
+        <\/div>
+        <div class="mcard alpha-mode" onclick="startGame('alpha-order')">
+          <div class="micon">🔢<\/div><div class="mname">ABC Order<\/div>
+          <div class="mdesc">Put letters back in alphabet order<\/div>
+        <\/div>
+        <div class="mcard alpha-mode" onclick="startGame('alpha-case')">
+          <div class="micon">🔠<\/div><div class="mname">Upper & Lower<\/div>
+          <div class="mdesc">Match the uppercase to its lowercase<\/div>
+        <\/div>
+      <\/div>`;
+  } else {
+    mc.innerHTML=`
+      <div class="mode-grid">
+        <div class="mcard" onclick="startGame('flashcard')">
+          <div class="micon">🃏<\/div><div class="mname">Flash Cards<\/div><div class="mdesc">See the word, flip for a clue<\/div>
+        <\/div>
+        <div class="mcard" onclick="startGame('choice')">
+          <div class="micon">🎯<\/div><div class="mname">Pick It!<\/div><div class="mdesc">Choose the right word<\/div>
+        <\/div>
+        <div class="mcard" onclick="startGame('spell')">
+          <div class="micon">✏️<\/div><div class="mname">Spell It!<\/div><div class="mdesc">Type the missing word<\/div>
+        <\/div>
+        <div class="mcard" onclick="startGame('sort')">
+          <div class="micon">🗂️<\/div><div class="mname">Word Sort<\/div><div class="mdesc">Sort words into groups<\/div>
+        <\/div>
+      <\/div>`;
+  }
+  show('mode-screen');
+}
+
+// ═══ GAME START ═══
+function startGame(mode){
+  curMode=mode;sessIdx=0;sessScore=0;
+  document.getElementById('game-stars').textContent='0';
+  show('game-screen');
+
+  if(mode.startsWith('alpha-')){
+    alphaQueue=[...ALPHABET].sort(()=>Math.random()-.5).slice(0,10);
+    alphaIdx=0;alphaScore=0;alphaTotal=10;
+    renderAlphaQ();
+  } else {
+    const words=W.slice(curLevel.s,curLevel.e+1);
+    sessTotal=Math.min(10,words.length);
+    sessWords=[...words].sort(()=>Math.random()-.5).slice(0,sessTotal);
+    sessWords.forEach(w=>{const i=W.indexOf(w);if(i>=0)seenSet.add(i);});
+    saveState();renderQ();
+  }
+}
+
+function updateProg(idx,total){
+  document.getElementById('prog-bar').style.width=(idx/total*100)+'%';
+  document.getElementById('q-count').textContent=`${idx+1} / ${total}`;
+}
+
+// ═══════════════════════════════════
+// ALPHABET GAMES
+// ═══════════════════════════════════
+function renderAlphaQ(){
+  updateProg(alphaIdx,alphaTotal);
+  const letter=alphaQueue[alphaIdx];
+  const gc=document.getElementById('game-content');
+  if(curMode==='alpha-recog') renderLetterRecog(letter,gc);
+  else if(curMode==='alpha-sound') renderLetterSound(letter,gc);
+  else if(curMode==='alpha-order') renderAlphaOrder(gc);
+  else if(curMode==='alpha-case') renderCaseMatch(letter,gc);
+}
+
+// 1) LETTER RECOGNITION — show A/a, pick matching pair
+function renderLetterRecog(letter,gc){
+  const isShowUpper=Math.random()>.5;
+  const shown=isShowUpper?letter:letter.toLowerCase();
+  const target=isShowUpper?letter.toLowerCase():letter;
+  // 3 wrong choices
+  const pool=ALPHABET.filter(l=>l!==letter).sort(()=>Math.random()-.5).slice(0,3);
+  const choices=[target,...pool.map(l=>isShowUpper?l.toLowerCase():l)].sort(()=>Math.random()-.5);
+  gc.innerHTML=`
+    <div class="alpha-box">
+      <div style="font-size:.82rem;opacity:.82;margin-bottom:8px">Find the ${isShowUpper?'lowercase':'uppercase'} match<\/div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;">
+        <div class="alpha-letter-display">${shown}<\/div>
+        ${audioBtn('The letter '+letter,'🔊')}
+      <\/div>
+      <div class="alpha-case-label">${isShowUpper?'uppercase → find lowercase':'lowercase → find uppercase'}<\/div>
+    <\/div>
+    <div class="alpha-grid">
+      ${choices.map(c=>`<button class="alpha-btn" data-chosen="${c}" data-correct="${target}">${c}<\/button>`).join('')}
+    <\/div>`;
+  gc.querySelectorAll('.alpha-btn').forEach(b=>b.addEventListener('click',function(){alphaAns(this,this.dataset.chosen,this.dataset.correct);}));
+}
+
+// 2) LETTER SOUND — show picture, pick starting letter
+function renderLetterSound(letter,gc){
+  const {e,w}=PHONICS[letter];
+  const pool=ALPHABET.filter(l=>l!==letter).sort(()=>Math.random()-.5).slice(0,3);
+  const choices=[letter,...pool].sort(()=>Math.random()-.5);
+  gc.innerHTML=`
+    <div class="phonics-box">
+      <div style="font-size:.82rem;opacity:.82;margin-bottom:6px">What letter does this start with?<\/div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
+        <div>
+          <span class="phonics-picture">${e}<\/span>
+          <div class="phonics-word">${w}<\/div>
+        <\/div>
+        ${audioBtn(w,'🔊')}
+      <\/div>
+      <div class="phonics-instr">Tap the letter that "${w}" starts with<\/div>
+    <\/div>
+    <div class="phonics-grid">
+      ${choices.map(c=>`<button class="phonics-btn" data-chosen="${c}" data-correct="${letter}">${c}<br><span style="font-size:.7rem;font-weight:400;opacity:.6">${c.toLowerCase()}<\/span><\/button>`).join('')}
+    <\/div>`;
+  speak(w);
+  gc.querySelectorAll('.phonics-btn').forEach(b=>b.addEventListener('click',function(){alphaAns(this,this.dataset.chosen,this.dataset.correct);}));
+}
+
+// 3) ALPHABET ORDER — put 5 consecutive letters in order
+function renderAlphaOrder(gc){
+  // Pick a random run of 5 consecutive letters
+  const start=Math.floor(Math.random()*22);
+  const run=ALPHABET.slice(start,start+5);
+  const shuffled=[...run].sort(()=>Math.random()-.5);
+  orderAssign=new Array(5).fill(null);
+  orderPending=null;
+
+  function render(){
+    gc.innerHTML=`
+      <div class="order-instr">Put the letters in ABC order — tap a letter, then tap a box 👇<\/div>
+      <div class="order-target">
+        <div class="order-target-label">ABC Order<\/div>
+        <div class="order-slots">
+          ${orderAssign.map((v,i)=>`
+            <div class="order-slot ${v?'filled':''}" id="oslot-${i}" data-slotidx="${i}">
+              ${v||''}
+            <\/div>`).join('')}
+        <\/div>
+      <\/div>
+      <div class="order-pool" id="order-pool">
+        ${shuffled.map((l,i)=>`
+          <div class="order-chip ${orderAssign.includes(l)?'used':''}" id="ochip-${i}"
+            data-letter="${l}">${l}
+            ${audioBtn('The letter '+l,'🔊','dark')}
+          <\/div>`).join('')}
+      <\/div>
+      <button class="btn-check-sort" data-checkorder="${run.join("")}">Check ✓<\/button>`;
+  }
+  render();
+
+  window._orderRender=render;
+  window._orderRun=run;
+  window._orderShuffled=shuffled;
+}
+
+function orderChipClick(chip,letter){
+  document.querySelectorAll('.order-chip').forEach(c=>c.classList.remove('selected'));
+  if(!chip.classList.contains('used')){chip.classList.add('selected');orderPending=letter;}
+}
+function orderSlotClick(idx){
+  if(orderPending===null)return;
+  // If slot already filled, return letter to pool
+  if(orderAssign[idx]){
+    const old=orderAssign[idx];
+    window._orderShuffled.forEach((_,i)=>{
+      const c=document.getElementById('ochip-'+i);
+      if(c&&c.textContent.trim().charAt(0)===old)c.classList.remove('used');
+    });
+  }
+  orderAssign[idx]=orderPending;
+  // Mark chip used
+  document.querySelectorAll('.order-chip').forEach(c=>{
+    if(c.textContent.trim().charAt(0)===orderPending&&!c.classList.contains('used'))
+      {c.classList.add('used');c.classList.remove('selected');}
+  });
+  orderPending=null;
+  window._orderRender();
+}
+function checkOrder(correctStr){
+  const correct=correctStr.split('');
+  let ok=true;
+  orderAssign.forEach((v,i)=>{
+    const slot=document.getElementById('oslot-'+i);
+    if(slot){
+      if(v===correct[i])slot.classList.add('correct');
+      else{slot.classList.add('wrong');ok=false;}
+    }
+  });
+  if(orderAssign.includes(null)){toast('Fill all the boxes first!','bad');return;}
+  const score=orderAssign.filter((v,i)=>v===correct[i]).length;
+  if(ok){
+    alphaMastered.add(correct[0]);
+    alphaScore+=5;document.getElementById('game-stars').textContent=alphaScore;
+    toast('🎉 Perfect order!','good');saveState();setTimeout(alphaNext,1200);
+  } else {
+    alphaScore+=score;document.getElementById('game-stars').textContent=alphaScore;
+    toast(`${score}/5 in the right spot`,'bad');setTimeout(alphaNext,2000);
+  }
+}
+
+// 4) UPPERCASE / LOWERCASE MATCH
+function renderCaseMatch(letter,gc){
+  const isShowUpper=Math.random()>.5;
+  const shown=isShowUpper?letter:letter.toLowerCase();
+  const target=isShowUpper?letter.toLowerCase():letter;
+  const pool=ALPHABET.filter(l=>l!==letter).sort(()=>Math.random()-.5).slice(0,3);
+  const choices=[target,...pool.map(l=>isShowUpper?l.toLowerCase():l)].sort(()=>Math.random()-.5);
+  gc.innerHTML=`
+    <div class="match-show">
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px">
+        <div>
+          <div class="match-big">${shown}<\/div>
+          <div class="match-label">${isShowUpper?'uppercase':'lowercase'} — find the ${isShowUpper?'lowercase':'uppercase'}<\/div>
+        <\/div>
+        ${audioBtn('The letter '+letter,'🔊')}
+      <\/div>
+    <\/div>
+    <div class="match-grid">
+      ${choices.map(c=>`<button class="match-btn" data-chosen="${c}" data-correct="${target}">${c}<\/button>`).join('')}
+    <\/div>`;
+  gc.querySelectorAll('.match-btn').forEach(b=>b.addEventListener('click',function(){alphaAns(this,this.dataset.chosen,this.dataset.correct);}));
+}
+
+// Shared answer handler for letter recognition, sound, case match
+function alphaAns(btn,chosen,correct){
+  document.querySelectorAll('.alpha-btn,.phonics-btn,.match-btn').forEach(b=>b.onclick=null);
+  if(chosen===correct){
+    btn.classList.add('correct');
+    alphaMastered.add(correct.toUpperCase());
+    alphaScore++;document.getElementById('game-stars').textContent=alphaScore;
+    toast('⭐ Correct!','good');saveState();setTimeout(alphaNext,900);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.alpha-btn,.phonics-btn,.match-btn').forEach(b=>{
+      if(b.textContent.trim().charAt(0)===correct)b.classList.add('correct');
+    });
+    speak(correct.toUpperCase());
+    toast(`The letter is "${correct.toUpperCase()}"`,'bad');setTimeout(alphaNext,1600);
+  }
+}
+
+function alphaNext(){
+  alphaIdx++;
+  if(alphaIdx>=alphaTotal) showAlphaResults();
+  else renderAlphaQ();
+}
+
+function showAlphaResults(){
+  const pct=alphaScore/alphaTotal;
+  const [trophy,title]=pct>=.9?['🏆','Superstar!']:pct>=.7?['🌟','Great Job!']:pct>=.5?['⭐','Good Try!']:['💪','Keep Going!'];
+  const earned=Math.round(alphaScore*2);addStars(earned);
+  saveState();renderLevelGrid();
+  document.getElementById('res-trophy').textContent=trophy;
+  document.getElementById('res-title').textContent=title;
+  document.getElementById('res-score').textContent=`${alphaScore} out of ${alphaTotal} right! +${earned} stars ⭐`;
+  document.getElementById('res-stars').textContent='⭐'.repeat(Math.max(1,Math.round(pct*5)));
+  show('result-screen');if(pct>=.7)confetti();
+}
+
+// ═══════════════════════════════════
+// WORD GAMES
+// ═══════════════════════════════════
+function renderQ(){
+  updateProg(sessIdx,sessTotal);
+  const w=sessWords[sessIdx],gc=document.getElementById('game-content');
+  if(curMode==='flashcard')renderFlashcard(w,gc);
+  else if(curMode==='choice')renderChoice(w,gc);
+  else if(curMode==='spell')renderSpell(w,gc);
+  else renderSort(gc);
+}
+
+// FLASHCARD
+function renderFlashcard(word,gc){
+  fcFlipped=false;
+  const s=SENT[word]||`I can read "${word}".`;
+  gc.innerHTML=`
+    <div class="fc-wrap" onclick="flipCard()">
+      <div class="fc" id="fc">
+        <div class="fc-front">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="fc-word">${word}<\/div>
+            ${audioBtn(word,'🔊')}
+          <\/div>
+          <div class="fc-hint">👆 Tap card to flip<\/div>
+        <\/div>
+        <div class="fc-back">
+          <div style="display:flex;align-items:center;gap:8px;padding:0 16px;">
+            <div class="fc-sentence">${hi(s,word)}<\/div>
+            ${audioBtn(s,'🔊')}
+          <\/div>
+          <div class="fc-hint">Read the bold word!<\/div>
+        <\/div>
+      <\/div>
+    <\/div>
+    <div class="fc-btns" id="fc-btns" style="display:none">
+      <button class="btn-practice" onclick="fcAns(false)">😅 Practice more<\/button>
+      <button class="btn-knew" onclick="fcAns(true)">✅ I knew it!<\/button>
+    <\/div>
+    <p style="text-align:center;color:#ccc;font-size:.76rem;margin-top:8px">Tap card to flip • 🔊 to hear<\/p>`;
+}
+function flipCard(){
+  fcFlipped=!fcFlipped;
+  document.getElementById('fc').classList.toggle('flipped',fcFlipped);
+  if(fcFlipped)document.getElementById('fc-btns').style.display='flex';
+}
+function fcAns(knew){
+  const w=sessWords[sessIdx];
+  if(knew){masteredSet.add(W.indexOf(w));sessScore++;document.getElementById('game-stars').textContent=sessScore;toast('⭐ Great!','good');}
+  else toast('Keep practicing!','bad');
+  saveState();nextQ();
+}
+
+// CHOICE
+function renderChoice(word,gc){
+  const pool=W.slice(curLevel.s,curLevel.e+1).filter(w=>w!==word);
+  const dist=pool.sort(()=>Math.random()-.5).slice(0,3);
+  const choices=[word,...dist].sort(()=>Math.random()-.5);
+  const s=SENT[word]||`Find the word.`;
+  gc.innerHTML=`
+    <div class="mc-box">
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px">
+        <div style="font-size:.8rem;opacity:.8">Which word completes the sentence?<\/div>
+        ${audioBtn(s,'🔊')}
+      <\/div>
+      <div class="mc-sent">${s.replace(new RegExp('\\b'+er(word)+'\\b'),'<strong style="font-size:1.1rem">______<\/strong>')}<\/div>
+    <\/div>
+    <div class="mc-grid">${choices.map(c=>`<button class="mc-btn" data-chosen="${c}" data-correct="${word}">${c}<\/button>`).join('')}<\/div>`;
+  gc.querySelectorAll('.mc-btn').forEach(b=>b.addEventListener('click',function(){choiceAns(this,this.dataset.chosen,this.dataset.correct);}));
+}
+function choiceAns(btn,chosen,correct){
+  document.querySelectorAll('.mc-btn').forEach(b=>b.onclick=null);
+  if(chosen===correct){
+    btn.classList.add('correct');masteredSet.add(W.indexOf(correct));
+    sessScore++;document.getElementById('game-stars').textContent=sessScore;
+    speak(correct);toast('🎉 Correct!','good');saveState();setTimeout(nextQ,900);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.mc-btn').forEach(b=>{if(b.textContent.trim()===correct)b.classList.add('correct');});
+    speak(correct);toast(`The word was "${correct}"`,'bad');setTimeout(nextQ,1600);
+  }
+}
+
+// SPELL
+function renderSpell(word,gc){
+  const s=SENT[word]||`Spell the missing word.`;
+  const tiles=word.split('').sort(()=>Math.random()-.5);
+  gc.innerHTML=`
+    <div class="spell-box">
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px">
+        <div style="font-size:.78rem;opacity:.82">Fill in the missing word:<\/div>
+        ${audioBtn(word,'🔊')}
+      <\/div>
+      <div class="spell-sent">${s.replace(new RegExp('\\b'+er(word)+'\\b'),'<span class="spell-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<\/span>')}<\/div>
+    <\/div>
+    <div class="ltiles">${tiles.map((l,i)=>`<div class="ltile" id="lt${i}" data-letter="${l}">${l}<\/div>`).join('')}<\/div>
+    <div class="spell-row">
+      <input class="spell-inp" id="sinp" type="text" placeholder="Type here…" maxlength="20"
+        onkeydown="if(event.key==='Enter')chkSpell('${eq(word)}')">
+      <button class="btn-check" data-chkspell="${word}">Check ✓<\/button>
+    <\/div>
+    <p style="text-align:center;color:#ccc;font-size:.75rem">Tap letters or type • 🔊 to hear the word<\/p>`;
+  gc.querySelectorAll('.ltile').forEach(b=>b.addEventListener('click',function(){useLet(this,this.dataset.letter);}));
+  const cb=gc.querySelector('[data-chkspell]');
+  if(cb)cb.addEventListener('click',function(){chkSpell(this.dataset.chkspell);});
+  document.getElementById('sinp').addEventListener('keydown',function(e){if(e.key==='Enter'){const cb=document.querySelector('[data-chkspell]');if(cb)chkSpell(cb.dataset.chkspell);}});
+  document.getElementById('sinp').focus();
+}
+function useLet(tile,l){tile.classList.add('used');const i=document.getElementById('sinp');i.value+=l;i.focus();}
+function chkSpell(correct){
+  const inp=document.getElementById('sinp'),val=inp.value.trim().toLowerCase();
+  if(val===correct.toLowerCase()){
+    inp.classList.add('correct');masteredSet.add(W.indexOf(correct));
+    sessScore++;document.getElementById('game-stars').textContent=sessScore;
+    speak(correct);toast('✨ Perfect!','good');saveState();setTimeout(nextQ,1000);
+  } else {
+    inp.classList.add('wrong');speak(correct);toast(`The word is "${correct}"`,'bad');
+    setTimeout(()=>{inp.classList.remove('wrong');inp.value='';
+      document.querySelectorAll('.ltile').forEach(t=>t.classList.remove('used'));},1300);
+    setTimeout(nextQ,2100);
+  }
+}
+
+// SORT
+function renderSort(gc){
+  sortWords=sessWords.slice(0,8);sortAssign={};pendingWord=null;
+  gc.innerHTML=`
+    <div class="sort-instr">Tap a word, then tap a bin to sort it 👇<\/div>
+    <div class="sort-pool" id="sort-pool"><\/div>
+    <p style="text-align:center;color:#bbb;font-size:.75rem;margin-bottom:12px">Short = 3 letters or fewer &nbsp;|&nbsp; Long = 4+ letters<\/p>
+    <div class="sort-bins">
+      <div class="sort-bin" id="bin-short" onclick="binClick('short')">
+        <h4 style="color:#1565C0">📏 Short (1–3 letters)<\/h4>
+        <div class="placed-area" id="placed-short"><\/div>
+      <\/div>
+      <div class="sort-bin" id="bin-long" onclick="binClick('long')">
+        <h4 style="color:#6A1B9A">📐 Long (4+ letters)<\/h4>
+        <div class="placed-area" id="placed-long"><\/div>
+      <\/div>
+    <\/div>
+    <button class="btn-check-sort" onclick="chkSort()">Check Answers ✓<\/button>`;
+  rebuildPool();
+}
+function rebuildPool(){
+  const pool=document.getElementById('sort-pool');if(!pool)return;pool.innerHTML='';
+  sortWords.forEach(w=>{
+    if(sortAssign[w]!==undefined)return;
+    const chip=document.createElement('div');chip.className='sort-chip';chip.textContent=w;
+    chip.addEventListener('click',()=>{document.querySelectorAll('.sort-chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');pendingWord=w;speak(w);});
+    pool.appendChild(chip);
+  });
+}
+function binClick(key){
+  if(!pendingWord)return;
+  sortAssign[pendingWord]=key;
+  const placed=document.getElementById('placed-'+key);
+  const chip=document.createElement('div');chip.className='placed-chip pending';chip.textContent=pendingWord;
+  placed.appendChild(chip);
+  document.querySelectorAll('.sort-chip').forEach(c=>{if(c.textContent===pendingWord)c.remove();});
+  pendingWord=null;
+}
+function chkSort(){
+  if(Object.keys(sortAssign).length<sortWords.length){toast('Sort all the words first!','bad');return;}
+  let correct=0;
+  sortWords.forEach(w=>{
+    const exp=w.length<=3?'short':'long',got=sortAssign[w];
+    document.getElementById('placed-'+got).querySelectorAll('.placed-chip').forEach(c=>{
+      if(c.textContent===w)c.classList.replace('pending',exp===got?'ok':'bad');
+    });
+    if(exp===got){correct++;masteredSet.add(W.indexOf(w));}
+  });
+  sessScore+=correct;document.getElementById('game-stars').textContent=sessScore;
+  toast(`${correct}/${sortWords.length} correct!`,correct>=sortWords.length*.7?'good':'bad');
+  saveState();setTimeout(showResults,1900);
+}
+
+function nextQ(){sessIdx++;if(sessIdx>=sessTotal||curMode==='sort')showResults();else renderQ();}
+
+function showResults(){
+  const pct=sessScore/sessTotal;
+  const [trophy,title]=pct>=.9?['🏆','Superstar!']:pct>=.7?['🌟','Great Job!']:pct>=.5?['⭐','Good Try!']:['💪','Keep Going!'];
+  const earned=Math.round(sessScore*2);addStars(earned);
+  if(!levelProg[curLevel.id])levelProg[curLevel.id]=0;
+  levelProg[curLevel.id]=Math.min(curLevel.e-curLevel.s+1,(levelProg[curLevel.id]||0)+sessScore);
+  saveState();renderLevelGrid();
+  document.getElementById('res-trophy').textContent=trophy;
+  document.getElementById('res-title').textContent=title;
+  document.getElementById('res-score').textContent=`${sessScore} out of ${sessTotal} right! +${earned} stars ⭐`;
+  document.getElementById('res-stars').textContent='⭐'.repeat(Math.max(1,Math.round(pct*5)));
+  show('result-screen');if(pct>=.7)confetti();
+}
+
+// ═══ REPORT ═══
+function showReport(){
+  const now=new Date();
+  document.getElementById('rpt-date').textContent=
+    `Generated: ${now.toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'})}`;
+  document.getElementById('rpt-name').value=studentName;
+  const kPct=pctRange(0,10),g1Pct=pctRange(0,45),g2Pct=pctRange(0,125);
+  const alphaPct=Math.round(alphaMastered.size/26*100);
+
+  let html=`
+    <div class="rpt-summary">
+      <h3>Overall Summary<\/h3>
+      <div class="srow"><span>Student<\/span><strong>${studentName||'(not set)'}<\/strong><\/div>
+      <div class="srow"><span>Alphabet mastered<\/span><strong>${alphaMastered.size} / 26 letters (${alphaPct}%)<\/strong><\/div>
+      <div class="srow"><span>Words mastered<\/span><strong>${masteredSet.size} / 300<\/strong><\/div>
+      <div class="srow"><span>Words practiced<\/span><strong>${seenSet.size} / 300<\/strong><\/div>
+      <div class="srow"><span>Total stars earned<\/span><strong>⭐ ${totalStars}<\/strong><\/div>
+      <div class="srow"><span>Kindergarten target (words 1–10)<\/span><strong>${badge(kPct)}<\/strong><\/div>
+      <div class="srow"><span>Grade 1 target (words 1–45)<\/span><strong>${badge(g1Pct)}<\/strong><\/div>
+      <div class="srow"><span>Grade 2 target (words 1–125)<\/span><strong>${badge(g2Pct)}<\/strong><\/div>
+    <\/div>
+    <div class="rpt-card">
+      <div class="rpt-card-hdr">
+        <h3>🔤 Alphabet Progress<\/h3>
+        ${alphaPct>=80?'<span class="ebadge met">✅ Strong<\/span>':alphaPct>=50?'<span class="ebadge partial">🔄 In Progress<\/span>':'<span class="ebadge notmet">📌 Getting Started<\/span>'}
+      <\/div>
+      <div class="rbar-row"><div class="rbar-label">Mastered<\/div>
+        <div class="rbar-wrap"><div class="rbar ${alphaPct>=80?'good':alphaPct>=50?'mid':'low'}" style="width:${alphaPct}%"><\/div><\/div>
+        <div class="rbar-pct">${alphaPct}%<\/div><\/div>
+      <div class="expect-note">Solid alphabet knowledge — both uppercase and lowercase — is the foundation for all reading and phonics work. Letters mastered: <strong>${[...alphaMastered].sort().join(', ')||'none yet'}<\/strong><\/div>
+    <\/div>`;
+
+  LEVELS.filter(l=>!l.isAlpha).forEach(lv=>{
+    const words=W.slice(lv.s,lv.e+1);
+    const mastered=words.filter((_,i)=>masteredSet.has(lv.s+i));
+    const unseen=words.filter((_,i)=>!seenSet.has(lv.s+i));
+    const mPct=Math.round(mastered.length/words.length*100);
+    const sPct=Math.round((words.length-unseen.length)/words.length*100);
+    const bc=mPct>=80?'good':mPct>=50?'mid':'low';
+    let expNote='';
+    if(lv.id==='k')expNote=`The teacher's expectation is that students know words 1–10 by end of Kindergarten. Word 10 is <strong>"it"<\/strong>. Current mastery of words 1–10: <strong>${kPct}%<\/strong>.`;
+    else if(lv.id==='g1a')expNote=`The Grade 1 expectation boundary is word 45 (<strong>"which"<\/strong>). Current mastery of words 1–45: <strong>${g1Pct}%<\/strong>.`;
+    else if(lv.id==='g1b')expNote=`The Grade 2 expectation boundary is word 125 (<strong>"think"<\/strong>). Current mastery of words 1–125: <strong>${g2Pct}%<\/strong>.`;
+    else if(lv.id==='g2a')expNote=`These words are <strong>above the Grade 2 expectation<\/strong>. Excellent preparation for Grade 3.`;
+    else expNote=`These words are <strong>well above Grade 2 expectations<\/strong>. Strong extension work.`;
+    html+=`
+      <div class="rpt-card">
+        <div class="rpt-card-hdr">
+          <h3>${lv.icon} ${lv.name} <span style="font-size:.78rem;font-weight:400;color:#aaa">words ${lv.s+1}–${lv.e+1}<\/span><\/h3>
+          ${mPct>=80?'<span class="ebadge met">✅ Mastered<\/span>':mPct>=40?'<span class="ebadge partial">🔄 In Progress<\/span>':'<span class="ebadge notmet">📌 Not Started<\/span>'}
+        <\/div>
+        <div class="rbar-row"><div class="rbar-label">Mastered<\/div>
+          <div class="rbar-wrap"><div class="rbar ${bc}" style="width:${mPct}%"><\/div><\/div>
+          <div class="rbar-pct">${mPct}%<\/div><\/div>
+        <div class="rbar-row"><div class="rbar-label">Practiced<\/div>
+          <div class="rbar-wrap"><div class="rbar mid" style="width:${sPct}%"><\/div><\/div>
+          <div class="rbar-pct">${sPct}%<\/div><\/div>
+        <div class="expect-note">${expNote}<\/div>
+        ${mastered.length?`<div style="font-size:.76rem;font-weight:700;color:#2E7D32;margin-top:10px;margin-bottom:5px">✅ Mastered (${mastered.length})<\/div>
+          <div class="word-chips">${mastered.map(w=>`<span class="wchip mastered">${w}<\/span>`).join('')}<\/div>`:''}
+        ${unseen.length?`<div style="font-size:.76rem;font-weight:700;color:#9E9E9E;margin-top:8px;margin-bottom:5px">⬜ Not yet practiced (${unseen.length})<\/div>
+          <div class="word-chips">${unseen.map(w=>`<span class="wchip unseen">${w}<\/span>`).join('')}<\/div>`:''}
+      <\/div>`;
+  });
+  document.getElementById('report-body').innerHTML=html;
+  show('report-screen');
+}
+
+function pctRange(from,to){
+  return Math.round([...Array(to-from).keys()].filter(i=>masteredSet.has(from+i)).length/(to-from)*100);
+}
+function badge(pct){
+  if(pct>=80)return`<span class="ebadge met">✅ Met (${pct}%)<\/span>`;
+  if(pct>=50)return`<span class="ebadge partial">🔄 Partial (${pct}%)<\/span>`;
+  return`<span class="ebadge notmet">📌 Not Yet (${pct}%)<\/span>`;
+}
+
+// ═══ RESET ═══
+function confirmReset(){
+  if(confirm('Reset ALL progress? Stars, mastered words, alphabet progress, and level progress will be cleared. This cannot be undone.')){
+    totalStars=0;levelProg={};masteredSet=new Set();seenSet=new Set();alphaMastered=new Set();
+    document.getElementById('total-stars').textContent='0';
+    saveState();renderLevelGrid();toast('Progress reset!','bad');show('level-screen');
+  }
+}
+
+// ═══ HELPERS ═══
+function hi(s,w){return s.replace(new RegExp('\\b'+er(w)+'\\b'),'<strong>'+w+'<\/strong>');}
+function er(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function eq(s){return s.replace(/'/g,"\\'");}
+function toast(msg,type=''){
+  const t=document.getElementById('toast');t.textContent=msg;t.className=type;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1900);
+}
+function confetti(){
+  const cols=['#FFD600','#42A5F5','#43A047','#F4511E','#C2185B','#6A1B9A'];
+  for(let i=0;i<38;i++){
+    const el=document.createElement('div');el.className='cpiec';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${cols[Math.floor(Math.random()*cols.length)]};animation-delay:${Math.random()*1.2}s;animation-duration:${1.5+Math.random()}s;transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),3000);
+  }
+}
+// Delegated audio button handler — handles all data-speak buttons anywhere in the DOM
+document.addEventListener('click',function(e){
+  const btn=e.target.closest('[data-speak]');
+  if(btn){e.stopPropagation();speak(btn.getAttribute('data-speak'));}
+});
+
+init();
+</script>
+</body>
+</html>
